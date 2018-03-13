@@ -1,7 +1,5 @@
 package com.example.srirang.nira_android;
 
-import java.util.Map;
-
 /**
  * Created by Srirang on 3/11/2018.
  */
@@ -13,7 +11,8 @@ public class WQIModal {
     DMSModal dissolved_metals_and_salts;
     Integer dissolved_oxygen;
 
-    public WQIModal(){}
+    public WQIModal() {
+    }
 
     public WQIModal(String alkalinity, String color, Double ph, DMSModal dissolved_metals_and_salts, Integer dissolved_oxygen) {
         this.alkalinity = alkalinity;
