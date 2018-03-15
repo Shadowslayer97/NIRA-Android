@@ -1,7 +1,6 @@
 package com.example.srirang.nira_android;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Created by Srirang on 3/11/2018.
@@ -18,7 +17,8 @@ public class AddModal {
     public String image;
     public Integer quality_index;
 
-    public AddModal(){}
+    public AddModal() {
+    }
 
     public AddModal(String coordinates, String district, String state, WQIModal water_quality_index, Double temperature, Date time_of_sample, String image, Integer quality_index) {
 
@@ -95,7 +95,5 @@ public class AddModal {
     public void setQuality_index(Integer quality_index) {
         this.quality_index = quality_index;
     }
-
-
 
 }

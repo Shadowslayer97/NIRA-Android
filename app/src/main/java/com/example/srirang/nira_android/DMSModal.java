@@ -12,7 +12,8 @@ public class DMSModal {
     Double manganese;
     Double magnessium;
 
-    public DMSModal(){}
+    public DMSModal() {
+    }
 
     public DMSModal(Double sodium, Double chloride, Double potassium, Double calcium, Double manganese, Double magnessium, Double lead, Double mercury, Double arsenic) {
 
