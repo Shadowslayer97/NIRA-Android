@@ -17,4 +17,11 @@
         android:text="Add Sample"
         app:fabSize="normal"/>
 
+    <Button
+        android:text="Camera Trial"
+        android:id="@+id/camera_trial"
+        android:onClick="onCameraClick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>
