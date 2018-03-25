@@ -10,7 +10,7 @@
     <Button
         android:id="@+id/button1"
 
-        android:text="Take a Photo"
+        android:text="Take Picture"
         androclass:layout_width="match_parent"
         androclass:layout_height="100px">
     </Button>
@@ -20,4 +20,12 @@
         androclass:layout_width="match_parent"
         androclass:layout_height="600px">
     </ImageView>
+    <Button
+        android:id="@+id/btnUploadPicture"
+
+        android:text="Upload"
+        androclass:layout_width="match_parent"
+        androclass:layout_height="100px">
+    </Button>
+
 </LinearLayout>
