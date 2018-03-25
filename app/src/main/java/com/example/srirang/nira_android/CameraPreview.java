@@ -67,7 +67,7 @@ public class CameraPreview extends Activity {
         progressDialog.show();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         // Create a storage reference from our app
-        StorageReference storageReference = storage.getReferenceFromUrl("gs://<your-bucket-name>");
+        StorageReference storageReference = storage.getReference();
         StorageReference riversRef = storageReference.child("images/pic.jpg");
         // Get the data from an ImageView as bytes
         imageView.setDrawingCacheEnabled(true);
