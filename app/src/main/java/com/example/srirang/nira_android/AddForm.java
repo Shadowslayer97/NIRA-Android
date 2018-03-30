@@ -101,35 +101,26 @@ public class AddForm extends AppCompatActivity {
             case R.id.action_save:
                 onAddSubmitClicked();
                 return true;
-            case R.id.home:
+            case android.R.id.home:
                 //Show warning because maybe user pressed back button accidently.
                 if (!mFieldsHasChanged) {
                     NavUtils.navigateUpFromSameTask(this);
                     return true;
                 }
 
-                DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        NavUtils.navigateUpFromSameTask(AddForm.this);
-                    }
-                };
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                        .setMessage("Discard Changes?")
-                        .setPositiveButton("Yes", discardButtonClickListener)
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (dialog != null) {
-                                    dialog.dismiss();
-                                }
-                            }
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                showUnsavedChangesDialog();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mFieldsHasChanged) {
+            super.onBackPressed();
+            return;
+        }
+        showUnsavedChangesDialog();
     }
 
     public void onAddSubmitClicked() {
@@ -176,5 +167,30 @@ public class AddForm extends AppCompatActivity {
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("completed");
         db.push().setValue(newpost);
         Toast.makeText(this, "Entry Completed", Toast.LENGTH_LONG).show();
+    }
+
+    private void showUnsavedChangesDialog() {
+        DialogInterface.OnClickListener yesButtonClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                NavUtils.navigateUpFromSameTask(AddForm.this);
+            }
+        };
+
+        DialogInterface.OnClickListener noButtonClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setMessage("Discard Changes?")
+                .setPositiveButton("Yes", yesButtonClickListener)
+                .setNegativeButton("No", noButtonClickListener);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
