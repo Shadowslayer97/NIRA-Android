@@ -14,8 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
 
@@ -36,6 +40,8 @@ public class AddForm extends AppCompatActivity {
             return false;
         }
     };
+    private String url;
+    private String lat, lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +133,22 @@ public class AddForm extends AppCompatActivity {
     }
 
     public void onAddSubmitClicked() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("sampler")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("partial");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                url = String.valueOf(dataSnapshot.child("url"));
+                lat = String.valueOf(dataSnapshot.child("lat"));
+                lng = String.valueOf(dataSnapshot.child("lng"));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         DMSModal newdms = new DMSModal(Double.parseDouble(sodium.getText().toString()),
                 Double.parseDouble(chloride.getText().toString()),
                 Double.parseDouble(potassium.getText().toString()),
@@ -145,11 +167,13 @@ public class AddForm extends AppCompatActivity {
 
         Date date = new Date();
         //Not using Location API AS OF NOW HARDCODED
-        AddModal newpost = new AddModal("35.09 67.98", "kolhapur", "up", newwqi, Double.parseDouble(temperature.getText().toString()),
-                date, "img/src/images/public/3332434gfw2", 5);
+        AddModal newpost = new AddModal(lat + " " + lng, "kolhapur", "up", newwqi, Double.parseDouble(temperature.getText().toString()),
+                date, url, 5);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference db = database.getReference().child("sample");
+        DatabaseReference db = database.getReference()
+                .child("sampler")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("completed");
         db.push().setValue(newpost);
         Toast.makeText(this, "Entry Completed", Toast.LENGTH_LONG).show();
     }

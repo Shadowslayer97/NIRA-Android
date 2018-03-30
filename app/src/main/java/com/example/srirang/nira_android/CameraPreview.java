@@ -18,20 +18,21 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.UUID;
 
 public class CameraPreview extends Activity {
     private static final int CAMERA_REQUEST = 1888;
     ImageView imageView;
-    private Button  btnUploadPicture;
+    private Button btnUploadPicture;
     private StorageReference mStorageRef;
-    private FloatingActionButton addFab;
-
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,6 @@ public class CameraPreview extends Activity {
         mStorageRef = FirebaseStorage.getInstance().getReference();
         imageView = (ImageView) this.findViewById(R.id.imageView1);
         Button photoButton = (Button) this.findViewById(R.id.button1);
-        FloatingActionButton addFab = findViewById(R.id.fab_add);
 
         photoButton.setOnClickListener(new View.OnClickListener() {
 
@@ -53,13 +53,6 @@ public class CameraPreview extends Activity {
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
 
-        });
-        addFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AddForm.class);
-                startActivity(intent);
-            }
         });
 
         btnUploadPicture.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +64,8 @@ public class CameraPreview extends Activity {
             }
         });
     }
-    private  void uploadImage() {
+
+    private void uploadImage() {
 
         //if there is a file to upload
         //displaying a progress dialog while upload is going on
@@ -82,7 +76,8 @@ public class CameraPreview extends Activity {
         // Create a storage reference from our app
 
         StorageReference storageReference = storage.getReference();
-        StorageReference riversRef = storageReference.child("images/pic.jpg");
+        StorageReference riversRef = storageReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("partial/partial-image.jpg");
         // Get the data from an ImageView as bytes
         imageView.setDrawingCacheEnabled(true);
         imageView.buildDrawingCache();
@@ -91,6 +86,7 @@ public class CameraPreview extends Activity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
 
+        final String[] imageUrl = new String[1];
         UploadTask uploadTask = riversRef.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
@@ -100,44 +96,45 @@ public class CameraPreview extends Activity {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                //TODO location
+
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                imageUrl[0] = taskSnapshot.getDownloadUrl().toString();
+                FirebaseDatabase.getInstance()
+                        .getReference().child("sampler").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child("partial").child("url").setValue(imageUrl[0]);
+                //TODO insert location data
             }
-        })
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                //if the upload is successfull
+                //hiding the progress dialog
+                progressDialog.dismiss();
 
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        //if the upload is successfull
-                        //hiding the progress dialog
-                        progressDialog.dismiss();
+                //and displaying a success toast
+                Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                //if the upload is not successfull
+                //hiding the progress dialog
+                progressDialog.dismiss();
 
-                        //and displaying a success toast
-                        Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        //if the upload is not successfull
-                        //hiding the progress dialog
-                        progressDialog.dismiss();
+                //and displaying error message
+                Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                //calculating progress percentage
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
-                        //and displaying error message
-                        Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        //calculating progress percentage
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-
-                        //displaying percentage in progress dialog
-                        progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
-                    }
-                });
-
+                //displaying percentage in progress dialog
+                progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+            }
+        });
 
 
     }
