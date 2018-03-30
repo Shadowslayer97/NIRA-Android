@@ -17,20 +17,18 @@ public class Homepage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
-        FloatingActionButton addFab = findViewById(R.id.fab_add);
         btn = (Button) findViewById(R.id.camera_trial);
-        addFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AddForm.class);
-                startActivity(intent);
-            }
-        });
+        btn = (Button) findViewById(R.id.camera_trialupdate);
+
     }
 
    public void onCameraClick(View view){
         Intent intent = new Intent(getApplicationContext(),CameraPreview.class);
         startActivity(intent);
-    }
+    };
 
+    public void onUpdateClick(View view){
+        Intent intent = new Intent(getApplicationContext(),AddForm.class);
+        startActivity(intent);
+    };
 }
