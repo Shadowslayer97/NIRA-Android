@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -27,6 +30,7 @@ public class CameraPreview extends Activity {
     ImageView imageView;
     private Button  btnUploadPicture;
     private StorageReference mStorageRef;
+    private FloatingActionButton addFab;
 
 
 
@@ -39,6 +43,7 @@ public class CameraPreview extends Activity {
         mStorageRef = FirebaseStorage.getInstance().getReference();
         imageView = (ImageView) this.findViewById(R.id.imageView1);
         Button photoButton = (Button) this.findViewById(R.id.button1);
+        FloatingActionButton addFab = findViewById(R.id.fab_add);
 
         photoButton.setOnClickListener(new View.OnClickListener() {
 
@@ -46,6 +51,14 @@ public class CameraPreview extends Activity {
             public void onClick(View v) {
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+
+        });
+        addFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AddForm.class);
+                startActivity(intent);
             }
         });
 
@@ -67,6 +80,7 @@ public class CameraPreview extends Activity {
         progressDialog.show();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         // Create a storage reference from our app
+
         StorageReference storageReference = storage.getReference();
         StorageReference riversRef = storageReference.child("images/pic.jpg");
         // Get the data from an ImageView as bytes

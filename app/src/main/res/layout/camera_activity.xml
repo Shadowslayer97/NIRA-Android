@@ -1,31 +1,45 @@
-<LinearLayout xmlns:androclass="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:androclass="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     androclass:orientation="vertical"
-
     androclass:layout_width="match_parent"
     androclass:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/button1"
+    <android.support.design.widget.FloatingActionButton
+        androclass:id="@+id/fab_add"
+        androclass:layout_alignParentBottom="true"
+        androclass:layout_alignParentEnd="true"
+        androclass:layout_alignParentRight="true"
+        androclass:layout_margin="16dp"
+        androclass:src="@drawable/ic_action_add"
+        androclass:layout_width="wrap_content"
+        androclass:layout_height="wrap_content"
+        app:fabSize="mini"/>
 
-        android:text="Take Picture"
+
+    <Button
+        androclass:id="@+id/button1"
+
+        androclass:text="Take Picture"
         androclass:layout_width="match_parent"
         androclass:layout_height="100px">
     </Button>
 
+
     <ImageView
-        android:id="@+id/imageView1"
+        androclass:id="@+id/imageView1"
         androclass:layout_width="match_parent"
         androclass:layout_height="600px">
     </ImageView>
     <Button
-        android:id="@+id/btnUploadPicture"
-
-        android:text="Upload"
+        androclass:id="@+id/btnUploadPicture"
+        androclass:layout_marginTop="200dp"
+        androclass:text="Upload Picture"
         androclass:layout_width="match_parent"
+         androclass:layout_below="@id/button1"
         androclass:layout_height="100px">
     </Button>
 
-</LinearLayout>
+
+</RelativeLayout>
