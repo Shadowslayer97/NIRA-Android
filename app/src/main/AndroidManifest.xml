@@ -31,7 +31,12 @@
                 android:value=".Homepage" />
         </activity>
         <activity android:name=".CameraPreview" />
-        <activity android:name=".UpdateSampleActivity"></activity>
+        <activity android:name=".UpdateSampleActivity" />
+        <activity android:name=".AddSampleFormActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Homepage" />
+        </activity>
     </application>
 
 </manifest>
