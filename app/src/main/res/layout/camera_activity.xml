@@ -6,21 +6,8 @@
     androclass:layout_width="match_parent"
     androclass:layout_height="match_parent">
 
-    <android.support.design.widget.FloatingActionButton
-        androclass:id="@+id/fab_add"
-        androclass:layout_alignParentBottom="true"
-        androclass:layout_alignParentEnd="true"
-        androclass:layout_alignParentRight="true"
-        androclass:layout_margin="16dp"
-        androclass:src="@drawable/ic_action_add"
-        androclass:layout_width="wrap_content"
-        androclass:layout_height="wrap_content"
-        app:fabSize="mini"/>
-
-
     <Button
         androclass:id="@+id/button1"
-
         androclass:text="Take Picture"
         androclass:layout_width="match_parent"
         androclass:layout_height="100px">

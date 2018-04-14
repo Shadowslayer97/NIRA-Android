@@ -14,7 +14,7 @@ public class AddModal {
     public WQIModal water_quality_index;
     public Double temperature;
     public Date time_of_sample;
-    public String image;
+    public String url;
     public Integer quality_index;
 
     public AddModal() {
@@ -28,7 +28,7 @@ public class AddModal {
         this.water_quality_index = water_quality_index;
         this.temperature = temperature;
         this.time_of_sample = time_of_sample;
-        this.image = image;
+        this.url = image;
         this.quality_index = quality_index;
     }
 
@@ -80,12 +80,12 @@ public class AddModal {
         this.time_of_sample = time_of_sample;
     }
 
-    public String getImage() {
-        return image;
+    public String getUrl() {
+        return url;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Integer getQuality_index() {
